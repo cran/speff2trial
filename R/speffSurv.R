@@ -7,6 +7,7 @@ speffSurv <- function(formula, data, method=c("exhaustive", "forward", "backward
 	mf$trt.id <- mf$method <- mf$conf.level <- mf$optimal <- mf$fixed <- NULL
 	mf[[1]] <- as.name("model.frame")
 	mf <- eval(mf, parent.frame())
+
 	X <- as.matrix(model.matrix(terms(formula), mf)[,-1])
 	survtime <- model.response(mf)
 	U <- survtime[,1]
@@ -29,7 +30,7 @@ speffSurv <- function(formula, data, method=c("exhaustive", "forward", "backward
 	}
 	Ktx <- function(time,tx){
 		ntimes <- length(summary(km[tx+1])$time)
-		idx <- apply(matrix(time,ntimes,length(time),byrow=TRUE)>summary(km[tx+1])$time,2,sum)
+		idx <- apply(matrix(time,ntimes,length(time),byrow=TRUE)>=summary(km[tx+1])$time,2,sum)
 		stime <- ifelse(idx==0,1,summary(km[tx+1])$surv[pmax(idx,1)])
 		ifelse(stime>0,stime,summary(km[tx+1])$surv[pmax(idx-1,1)]/2)
 	}
@@ -38,30 +39,24 @@ speffSurv <- function(formula, data, method=c("exhaustive", "forward", "backward
 		K1 <- Ktx(time,1)
 		ifelse(tx==0,K0,K1)
 	}
-	mHat <- function(beta){ d*(ind - abar) - sapply(1:N, function(i){ sum(d*(ind[i]-abar)*
-	exp(beta*ind[i])*Yi(i,U)/KY) }) }
-	gBar <- function(u,tx){
-		Tx <- matrix(tx,N,length(tx),byrow=TRUE)
-		drop(crossprod(g,Ymat(u)*(ind==Tx))/pmax(apply(Ymat(u)*(ind==Tx),2,sum),1))
-	}
-	estfnc <- function(beta){ sum(d*(ind-aBar(U,beta)) - (ind-pi)*f - 
-	(1-d)*(g-gbar)/K) }
+	KY <- function(beta){pmax(drop(crossprod(exp(beta*ind),Ymat(U))),1)}
+	mHat <- function(beta){ d*(ind - aBar(U,beta)) - sapply(1:N, function(i){ sum(d*(ind[i]- aBar(U,beta))*
+	exp(beta*ind[i])*Yi(i,U)/KY(beta)) }) }
+	estfnc <- function(beta){ sum(d*(ind-aBar(U,beta)) - (ind-pi)*f - g) }
 	
 	fitPH <- coxph(as.formula(paste(c(formula[[2]]),"~",trt.id)), data=data)
 	betaPH <- fitPH$coef
 	varbetaPH <- fitPH$var
 	km <- survfit(as.formula(paste("Surv(U,1-d)~",trt.id)), data=data)
-	abar <- aBar(U,betaPH)
-	KY <- pmax(drop(crossprod(exp(betaPH*ind),Ymat(U))),1)
 	KY1 <- sapply(1:N, function(k) max(sum(Ytx(U[k],1)),1))
 	KY0 <- sapply(1:N, function(k) max(sum(Ytx(U[k],0)),1))
-	m <- mHat(betaPH)
+	m <- mHat(betaPH)                    
 	KM1 <- Ktx(U,1)
 	KM0 <- Ktx(U,0)
 	K <- K(U,ind)
 	wbar1 <- wBar(U,1)
 	wbar0 <- wBar(U,0)
-	H <- lapply(1:N, function(i){ (1-d[i])*(X[i,]-wBar(U[i],ind[i]))/Ktx(U[i],ind[i]) - 
+	H <- lapply(1:N, function(i){ (1-d[i])*(X[i,]-wBar(U[i],ind[i]))/Ktx(U[i],ind[i]) -
 	ind[i]*drop((t(Xi(i))-wbar1) %*% ( (1-d)*ind*Yi(i,U)/(KM1*KY1) )) -
 	(1-ind[i])*drop((t(Xi(i))-wbar0) %*% ( (1-d)*(1-ind)*Yi(i,U)/(KM0*KY0) )) })
 	H <- t(do.call("cbind",H))
@@ -80,11 +75,10 @@ speffSurv <- function(formula, data, method=c("exhaustive", "forward", "backward
 	}
 
 	f <- W %*% solve(pi*(1-pi)*crossprod(W)) %*% crossprod(W,(ind-pi)*m)
-	g <- Q %*% solve(crossprod(Q)) %*% crossprod(Q,m)	
-	gbar <- gBar(U,ind)
+	g <- Q %*% solve(crossprod(Q)) %*% crossprod(Q,m)
 	betaAUG <- uniroot(estfnc, c(-10,10))$root
 	abarAUG <- aBar(U,betaAUG)
-	varbetaAUG <- sum(mHat(betaAUG)^2)/sum(d*(1-abarAUG)*abarAUG)^2
+	varbetaAUG <- sum((mHat(betaAUG)-(ind-pi)*f-g)^2)/sum(d*(1-abarAUG)*abarAUG)^2
 	
 	fits <- list(beta=c(betaPH,betaAUG))
 	class(fits) <- "speffSurv"
@@ -97,3 +91,4 @@ speffSurv <- function(formula, data, method=c("exhaustive", "forward", "backward
 	fits$n <- n
 	fits
 }
+

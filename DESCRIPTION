@@ -1,13 +1,13 @@
 Package: speff2trial
-Version: 1.0.1
-Date: 2009-11-08
+Version: 1.0.2
+Date: 2009-12-11
 Title: Semiparametric efficient estimation for a two-sample treatment
         effect
 Author: Michal Juraska <mjuraska@u.washington.edu>, with contributions
-        from Peter B. Gilbert <pgilbert@scharp.org>, Min Zhang
-        <mzhangst@umich.edu>, Marie Davidian <davidian@stat.ncsu.edu>,
-        Anastasios A. Tsiatis <tsiatis@stat.ncsu.edu> and Xiaomin Lu
-        <xlu2@phhp.ufl.edu>
+        from Peter B. Gilbert <pgilbert@scharp.org>, Xiaomin Lu
+        <xlu2@phhp.ufl.edu>, Min Zhang <mzhangst@umich.edu>, Marie
+        Davidian <davidian@stat.ncsu.edu>, and Anastasios A. Tsiatis
+        <tsiatis@stat.ncsu.edu>
 Maintainer: Michal Juraska <mjuraska@u.washington.edu>
 Depends: R (>= 2.7.2), leaps, survival
 Description: The package performs estimation and testing of the
@@ -21,6 +21,6 @@ Description: The package performs estimation and testing of the
 License: GPL-2
 LazyLoad: yes
 LazyData: yes
-Packaged: Sun Nov 8 20:39:42 2009; mjuraska
+Packaged: Mon Dec 14 17:22:10 2009; mjuraska
 Repository: CRAN
-Date/Publication: 2009-11-09 15:40:16
+Date/Publication: 2009-12-15 12:33:10

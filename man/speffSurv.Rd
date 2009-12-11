@@ -75,15 +75,17 @@ Tsiatis AA. (2006), \emph{Semiparametric Theory and Missing Data.}, New York: Sp
 \examples{
 str(ACTG175)
 
+data <- na.omit(ACTG175[ACTG175$arms==0 | ACTG175$arms==1,])
+
 ### efficiency-improved estimation of log hazard ratio using
 ### baseline covariates
 fit1 <- speffSurv(Surv(days,cens) ~ cd40+cd80+age+wtkg+drugs+karnof+z30+
-preanti+symptom, data=ACTG175, trt.id="treat")
+preanti+symptom, data=data, trt.id="arms")
 
 ### 'fit2' coerces the use of all specified baseline covariates;
 ### automated selection procedure is skipped
 fit2 <- speffSurv(Surv(days,cens) ~ cd40+cd80+age+wtkg+drugs+karnof+z30+
-preanti+symptom, data=ACTG175, trt.id="treat", fixed=TRUE)
+preanti+symptom, data=data, trt.id="arms", fixed=TRUE)
 }
 
 
