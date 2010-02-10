@@ -6,8 +6,9 @@ time-to-event endpoint}
 clinical trial with a right-censored time-to-event endpoint. It improves efficiency by leveraging baseline predictors 
 of the endpoint.}
 \usage{
-speffSurv(formula, data, method=c("exhaustive", "forward", 
-          "backward"), optimal=c("cp", "bic", "rsq"), trt.id, 
+speffSurv(formula, data, force.in=NULL, nvmax=9,
+          method=c("exhaustive", "forward", "backward"), 
+          optimal=c("cp", "bic", "rsq"), trt.id, 
           conf.level=0.95, fixed=FALSE)
 }
 \arguments{
@@ -16,6 +17,8 @@ speffSurv(formula, data, method=c("exhaustive", "forward",
   baseline variables that are considered for inclusion by the automated procedure for selecting the best models 
   predicting the endpoint. Interactions and variable transformations might also be considered.}
   \item{data}{a data frame in which to interpret the variables named in the \code{formula} and \code{trt.id}.}
+  \item{force.in}{a vector of indices to columns of the design matrix that should be included in each regression model.}
+  \item{nvmax}{the maximum number of covariates considered for inclusion in a model. The default is 9.}
   \item{method}{specifies the type of search technique used in the model selection procedure carried out by the
   \code{regsubsets} function. "\code{exhaustive}" (default) performs the all-subsets selection, whereas
   "\code{forward}" and "\code{backward}" execute a forward or backward step-wise selection, respectively.}

@@ -1,8 +1,8 @@
 speff <- function(formula, endpoint=c("quantitative", "dichotomous"), data, 
-	postrandom=NULL, method=c("exhaustive", "forward", "backward"), 
-	optimal=c("cp", "bic", "rsq"), trt.id, conf.level=0.95, missCtrl=NULL,
-	missTreat=NULL, endCtrlPre=NULL, endTreatPre=NULL, endCtrlPost=NULL, 
-	endTreatPost=NULL){
+	postrandom=NULL, force.in=NULL, nvmax=9, method=c("exhaustive", "forward", 
+	"backward"), optimal=c("cp", "bic", "rsq"), trt.id, conf.level=0.95, 
+	missCtrl=NULL, missTreat=NULL, endCtrlPre=NULL, endTreatPre=NULL, 
+	endCtrlPost=NULL, endTreatPost=NULL){
 	require(leaps, quietly=TRUE)
 	options(na.action=na.pass)
 	if (missing(trt.id)) stop("Treatment indicator in 'trt.id' is missing.")
@@ -11,7 +11,7 @@ speff <- function(formula, endpoint=c("quantitative", "dichotomous"), data,
 	optimal <- match.arg(optimal)
 	mf <- match.call()
 	mf$trt.id <- mf$endpoint <- mf$method <- mf$trt.id <- mf$conf.level <- 
-	mf$optimal <- mf$postrandom <- NULL
+	mf$optimal <- mf$postrandom <- mf$force.in <- mf$nvmax <- NULL
 	mf[[1]] <- as.name("model.frame")
 	mf <- eval(mf, parent.frame())
 	X <- model.matrix(terms(formula), mf)
@@ -31,7 +31,7 @@ speff <- function(formula, endpoint=c("quantitative", "dichotomous"), data,
 		for (i in 1:2){
 			if (is.null(miss[[i]])){ 
 				optmod <- modSearch(as.formula(paste("R~",c(formula[[3]]))), X[ind==i-1,-1], 
-				R[ind==i-1], endpoint, method, optimal)
+				R[ind==i-1], endpoint, method, optimal, force.in, nvmax)
 				naProb[[i]] <- predict(optmod$mod, data, type="response")
 			} else {
 				naProb[[i]] <- miss[[i]]
@@ -48,7 +48,7 @@ speff <- function(formula, endpoint=c("quantitative", "dichotomous"), data,
 	for (i in 1:2){
 		if (is.null(epre[[i]])){
 			optmod[[i]] <- modSearch(formula, X[ind0==i-1,-1], Y0[ind0==i-1],
-			endpoint, method, optimal)
+			endpoint, method, optimal, force.in, nvmax)
 			namesBase <- setdiff(optmod[[i]]$names, postrandom)
 			optmodBase <- glm(as.formula(paste(response,"~",paste(namesBase,collapse="+"))),
 			family=family, data=na.omit(data[ind==i-1,]))
@@ -93,7 +93,7 @@ speff <- function(formula, endpoint=c("quantitative", "dichotomous"), data,
 		naProb[[2]] - d*expit(mu1))
 		B <- crossprod(m)/sum(n)
 		A <- matrix(c((1-d)*exp(mu0)/(1+exp(mu0))^2, 0,
-		rep(d*exp(mu1)/(1+exp(mu1))^2, 2)), 2, 2)
+		rep(d*exp(mu1)/(1+exp(mu1))^2, 2)), 2, 2, byrow=TRUE)
 		invA <- solve(A)
 		v <- invA %*% B %*% t(invA)/sum(n)
 		vcov <- matrix(c(v[1,1],sum(v[1,]),sum(v[1,]),sum(v)),2,2)

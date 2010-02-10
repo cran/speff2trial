@@ -1,4 +1,5 @@
-speffSurv <- function(formula, data, method=c("exhaustive", "forward", "backward"), 
+speffSurv <- function(formula, data, force.in=NULL, nvmax=9, 
+	method=c("exhaustive", "forward", "backward"), 
 	optimal=c("cp", "bic", "rsq"), trt.id, conf.level=0.95, fixed=FALSE){
 	if (missing(trt.id)) stop("Treatment indicator in 'trt.id' is missing.")
 	method <- match.arg(method)
@@ -67,9 +68,9 @@ speffSurv <- function(formula, data, method=c("exhaustive", "forward", "backward
 	} else {
 		respRnd <- (ind-pi)*m
 		modRnd <- modSearch(as.formula(paste("respRnd~",paste(c(trt.id,colnames(X)),collapse="+"))),
-		X, respRnd, "quantitative", method, optimal)
+		X, respRnd, "quantitative", method, optimal, force.in, nvmax)
 		modCens <- modSearch(as.formula(paste("m~",c(formula[[3]]))), H, m, "quantitative", 
-		method, optimal)
+		method, optimal, force.in, nvmax)
 		W <- X[,modRnd$names]
 		Q <- H[,modCens$names]
 	}

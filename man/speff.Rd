@@ -1,17 +1,17 @@
 \name{speff}
 \alias{speff}
-\title{Semiparametric efficient estimation and testing for a two-sample treatment effect}
+\title{Semiparametric efficient estimation and testing for a two-sample treatment effect with a quantitative or dichotomous endpoint}
 \description{\code{speff} conducts estimation and testing of the treatment effect in a 2-group randomized
 clinical trial with a quantitative or dichotomous endpoint. The method is a special case of Robins, Rotnitzky, and 
 Zhao (1994, JASA). It improves efficiency by leveraging baseline predictors of the endpoint. The method uses 
 inverse probability weighting to provide unbiased estimation when the endpoint is missing at random.}
 \usage{
-speff(formula, endpoint=c("quantitative", "dichotomous"), data, 
-      postrandom=NULL, method=c("exhaustive", "forward", 
-      "backward"), optimal=c("cp", "bic", "rsq"), trt.id, 
-      conf.level=0.95, missCtrl=NULL, missTreat=NULL, 
-      endCtrlPre=NULL, endTreatPre=NULL,
-      endCtrlPost=NULL, endTreatPost=NULL)
+speff(formula, endpoint=c("quantitative", "dichotomous"), data,
+      postrandom=NULL, force.in=NULL, nvmax=9, 
+      method=c("exhaustive", "forward", "backward"), 
+      optimal=c("cp", "bic", "rsq"), trt.id, conf.level=0.95, 
+      missCtrl=NULL, missTreat=NULL, endCtrlPre=NULL, 
+      endTreatPre=NULL, endCtrlPost=NULL, endTreatPost=NULL)
 }
 \arguments{
   \item{formula}{a formula object with the response on the left of the \code{~} operator, and the linear
@@ -27,6 +27,8 @@ speff(formula, endpoint=c("quantitative", "dichotomous"), data,
   \code{trt.id}.}
   \item{postrandom}{a character vector designating postrandomization covariates included in the formula 
   (this argument allows to distinguish baseline from postrandomiation covariates).}
+  \item{force.in}{a vector of indices to columns of the design matrix that should be included in each regression model.}
+  \item{nvmax}{the maximum number of covariates considered for inclusion in a model. The default is 9.}
   \item{method}{specifies the type of search technique used in the model selection procedure carried out by the 
   \code{regsubsets} function. "\code{exhaustive}" (default) performs the all-subsets selection, whereas 
   "\code{forward}" and "\code{backward}" execute a forward or backward step-wise selection, respectively.}

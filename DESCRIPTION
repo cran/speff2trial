@@ -1,6 +1,6 @@
 Package: speff2trial
-Version: 1.0.2
-Date: 2009-12-11
+Version: 1.0.3
+Date: 2010-02-10
 Title: Semiparametric efficient estimation for a two-sample treatment
         effect
 Author: Michal Juraska <mjuraska@u.washington.edu>, with contributions
@@ -21,6 +21,6 @@ Description: The package performs estimation and testing of the
 License: GPL-2
 LazyLoad: yes
 LazyData: yes
-Packaged: Mon Dec 14 17:22:10 2009; mjuraska
+Packaged: Wed Feb 10 18:29:47 2010; mjuraska
 Repository: CRAN
-Date/Publication: 2009-12-15 12:33:10
+Date/Publication: 2010-02-11 08:45:42
