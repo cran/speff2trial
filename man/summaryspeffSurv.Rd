@@ -30,7 +30,7 @@ respectively. Set to \code{NULL} if \code{fixed=TRUE}.}
 \seealso{\code{\link{speffSurv}}}
 \examples{
 ### from the example for 'speffSurv':
-data <- na.omit(ACTG175[ACTG175$arms==0 | ACTG175$arms==1,])
+data <- na.omit(ACTG175[ACTG175$arms<=1 & ACTG175$gender==0,])
 
 fit2 <- speffSurv(Surv(days,cens) ~ cd40+cd80+age+wtkg+drugs+karnof+z30+
 preanti+symptom, data=data, trt.id="arms", fixed=TRUE)

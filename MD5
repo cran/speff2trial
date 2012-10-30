@@ -1,0 +1,16 @@
+c5a1ccc69198353d3f9adc67defe8d78 *DESCRIPTION
+bf3996020d8883fc14d7e1b00a8c20cf *NAMESPACE
+88095359ebfeb027840c01e4d5396451 *R/modSearch.R
+602b3d104ceab7561bd7eec0fe0583f0 *R/print.summary.speff.R
+75cbbd7b0547659e2e129979e57d579d *R/print.summary.speffSurv.R
+7ad41d77d7914635589d7d0ccc48c62d *R/speff.R
+cb6230dee3f7ad0844aaa45efa3d28ec *R/speffSurv.R
+f1b2216896a4138a6e1244f4eb2350cb *R/summary.speff.R
+c27614997fdd6e99084e81c316b1e00e *R/summary.speffSurv.R
+30c6921b04038a7109cf9ccf80a55efa *data/ACTG175.txt.gz
+1d578a8729594c1c503b78d7c3eb3ce2 *man/ACTG175.Rd
+b057296cca930574982499c323bce824 *man/modSearch.Rd
+05a2c381deac7e177d864122ba309437 *man/speff.Rd
+86b2aa70a957c07accd81232e6194b4b *man/speffSurv.Rd
+395c6635c460e7dcde99f66387b883ab *man/summaryspeff.Rd
+10a9327d73ef40d644694f49c00ce026 *man/summaryspeffSurv.Rd

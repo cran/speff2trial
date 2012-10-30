@@ -78,7 +78,7 @@ Tsiatis AA. (2006), \emph{Semiparametric Theory and Missing Data.}, New York: Sp
 \examples{
 str(ACTG175)
 
-data <- na.omit(ACTG175[ACTG175$arms==0 | ACTG175$arms==1,])
+data <- na.omit(ACTG175[ACTG175$arms<=1 & ACTG175$gender==0,])
 
 ### efficiency-improved estimation of log hazard ratio using
 ### baseline covariates
